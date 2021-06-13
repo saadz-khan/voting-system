@@ -31,6 +31,7 @@ unsigned char pin[] = {"12345"};
 unsigned char Epin[9];
 unsigned char vote[] = {"1234"};
 char vote_no[4];
+unsigned int j = 0;
 
 // All functions declarations
 void lcdcmd(unsigned char);
@@ -43,6 +44,7 @@ void line_disp(unsigned char *);
 void count();
 void thank_func();
 void display_vote(unsigned int party);
+void result();
 
 // main function
 int main()
@@ -53,8 +55,8 @@ int main()
 
     while (1)
     {
-        unsigned int i = 0, j = 0;      // Temporary Variable Declaration
-        if (j == 1){
+        unsigned int i = 0;      // Temporary Variable Declaration
+        if (j == 2){
             break;
         }
         lcdcmd(0x01); // Clear screen
@@ -75,9 +77,9 @@ int main()
             lcddisplay("Welcome User!");
             delay(500);
             lcdcmd(0x80);
-            line_disp("PTI PPP PML JUI");
+            line_disp("PTI PPP PML JUI ");
             count();
-            delay(1000);
+            delay(500);
 	        lcdcmd(0xc0); //decimal value: 193
             display_vote(party1);
             lcdcmd(0xc4);
@@ -87,11 +89,12 @@ int main()
             lcdcmd(0xcc);
             display_vote(party4);
         }
+        else return 0;
+    j++;      
     thank_func(); 
-    j++;
-    i++;
     }
-    return 0;
+    delay(500);
+    result();  
 }
 
 
@@ -104,9 +107,7 @@ for (k=0;k<=2;k++)
   party = party/10;
 }
 for (p=2;p>=0;p--)
-{
 lcddat(vote_no[p] + 48);
-}
 }
 
 
@@ -115,19 +116,19 @@ void count(){
     unsigned int m = 0;
     while (vote[m] != '\0'){
         Epin[m] = keypad();
-        if (vote[0] == Epin[0]){
+        if (vote[0] == Epin[m]){
             party1 = party1 + 1;
             break;
         }
-        if (vote[1] == Epin[1]){
+        if (vote[1] == Epin[m]){
             party2 = party2 + 1;
             break;
         }
-        if (vote[2] == Epin[2]){
+        if (vote[2] == Epin[m]){
             party3 = party3 + 1;
             break;
         }
-        if (vote[3] == Epin[3]){
+        if (vote[3] == Epin[m]){
             party4 = party4 + 1;
             break;
         }
@@ -135,7 +136,65 @@ void count(){
     m++;
 }
 
-// password check function and run the door motor
+void result(){
+    lcdcmd(0x01); //decimal value: 1
+        if (party1 > party2 && party1 > party3 && party1 > party4){
+            lcdcmd(0x80);
+            lcddisplay("PTI Won Election");
+        }
+        else if (party2 > party1 && party2 > party3 && party2 > party4){
+            lcdcmd(0x80);
+            lcddisplay("PPP Won Election");
+        }
+        else if (party3 > party1 && party3 > party2 && party3 > party4){
+            lcdcmd(0x80);
+            lcddisplay("PML Won Election");
+        }
+        else if (party4 > party1 && party4 > party3 && party4 > party2){
+            lcdcmd(0x80);
+            lcddisplay("JUI Won Election");
+        }
+        // Party 1 Tie Situations
+        else if (party1 == party2 && party2 != 0){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PTI and PPP");
+        }
+        else if (party1 == party3 && party3 != 0){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PTI and PML");
+        }
+        else if (party1 == party4 && party4 != 0){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PTI and JUI");
+        }
+        // Party2 Tie Situations
+        else if (party2 == party3 && party3 != 0){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PPP and PML");
+        }
+        else if (party2 == party4 && party4 != 0){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PPP and JUI");
+        }
+        // Party 3 Tie Situations
+        else if (party3 == party4 && party4 != 0){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PML and JUI");
+        }
+}
+
 int check()
 {
     //  compare the input value with the assign password value
@@ -353,5 +412,3 @@ char keypad()
         }
     }
 }
-
-end;
