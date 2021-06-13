@@ -27,17 +27,18 @@ party2 = 0;
 party3 = 0;
 party4 = 0;
 
-unsigned char pin[] = {"12345"};
+unsigned char pin1[] = {"12345"}, pin2[] = {"98765"}, pin3[] = {"25801"}, pin4[] = {"24568"};
 unsigned char Epin[9];
 unsigned char vote[] = {"1234"};
 char vote_no[4];
-unsigned int j = 0;
+unsigned int j,r = 0;
 
 // All functions declarations
 void lcdcmd(unsigned char);
 void lcddat(unsigned char);
 void lcddisplay(unsigned char *q);
 char keypad();
+int keygive();
 int check();
 void delay(unsigned int);
 void line_disp(unsigned char *);
@@ -51,12 +52,16 @@ int main()
 {
     lcdcmd(0x0F); //decimal value: 15
     lcdcmd(0x38); //decimal value: 56
-    lcdcmd(0x01); //decimal value: 1
-
+    lcdcmd(0x01); //decimal value: 1	lcd
+	lcdcmd(0x80);
+            line_disp("ENTER NO OF VOTES ");
+            delay(500);
+	        lcdcmd(0xc0); //decimal value: 193
+			r = keygive();
     while (1)
     {
         unsigned int i = 0;      // Temporary Variable Declaration
-        if (j == 2){
+        if (j == r){
             break;
         }
         lcdcmd(0x01); // Clear screen
@@ -64,13 +69,12 @@ int main()
         lcddisplay("ENTER PIN NUMBER");
         delay(500);	
         lcdcmd(0xc0); //decimal value: 192
-        while (pin[i] != '\0')
+        while (pin1[i] != '\0' || pin2[i] != '\0' || pin3[i] != '\0' || pin4[i] != '\0')
         {
             Epin[i] = keypad();
             delay(1000);
             i++;
         }
-        check();
 		if (check() == 1)
 		{
             lcdcmd(0x80);
@@ -154,13 +158,40 @@ void result(){
             lcdcmd(0x80);
             lcddisplay("JUI Won Election");
         }
-        // Party 1 Tie Situations
+        // All Parties Tie Situation
+		else if (party1 == party2 && party1 == party3 && party2 != 0 && party3 != 0 && party4 != 0   ){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("All parties");
+        }
+		// Three Parties Tie Situations
+		else if (party1 == party2 && party1 == party3 && party2 != 0 && party3 != 0  ){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PTI PPP PML");
+        }
+		else if (party1 == party3 && party1 == party4 && party3 != 0 && party4 != 0  ){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PTI PML JUI");
+        }
+		else if (party2 == party3 && party2 == party4 && party3 != 0 && party4 != 0  ){
+            lcdcmd(0x80);
+            lcddisplay("Tie in Election");
+            lcdcmd(0xc0);
+            lcddisplay("PPP PML JUI");
+        }
+		// Party 1 Tie Situation
         else if (party1 == party2 && party2 != 0){
             lcdcmd(0x80);
             lcddisplay("Tie in Election");
             lcdcmd(0xc0);
             lcddisplay("PTI and PPP");
         }
+		 
         else if (party1 == party3 && party3 != 0){
             lcdcmd(0x80);
             lcddisplay("Tie in Election");
@@ -198,7 +229,10 @@ void result(){
 int check()
 {
     //  compare the input value with the assign password value
-    if (pin[0] == Epin[0] && pin[1] == Epin[1] && pin[2] == Epin[2] && pin[3] == Epin[3] && pin[4] == Epin[4])
+    if ((pin1[0] == Epin[0] && pin1[1] == Epin[1] && pin1[2] == Epin[2] && pin1[3] == Epin[3] && pin1[4] == Epin[4])
+    || (pin2[0] == Epin[0] && pin2[1] == Epin[1] && pin2[2] == Epin[2] && pin2[3] == Epin[3] && pin2[4] == Epin[4])
+    || (pin3[0] == Epin[0] && pin3[1] == Epin[1] && pin3[2] == Epin[2] && pin3[3] == Epin[3] && pin3[4] == Epin[4])
+    || (pin4[0] == Epin[0] && pin4[1] == Epin[1] && pin4[2] == Epin[2] && pin4[3] == Epin[3] && pin4[4] == Epin[4]))
     {
         delay(500);
         lcdcmd(0x01); //decimal value: 1
@@ -291,7 +325,7 @@ void lcddisplay(unsigned char *q)
     {
         lcddat(q[k]);
     }
-    delay(10000);
+    delay(1000);
 }
 
 // assign keypad character value function
@@ -406,6 +440,123 @@ char keypad()
         if (keycolumn3 == 0)
         {
             lcddat('*');
+            delay(1000);
+            x = 1;
+            return '#';
+        }
+    }
+}
+
+int keygive()
+{
+    int x = 0;
+    while (x == 0)
+    {
+		// Algorithm for 4 x 3 keypad
+        // assign values for first row
+        keyrow1 = 0;
+        keyrow2 = 1;
+        keyrow3 = 1;
+        keyrow4 = 1;
+        if (keycolumn1 == 0)
+        {
+            lcddat('1');
+            delay(1000);
+            x = 1;
+            return 1;
+        }
+        if (keycolumn2 == 0)
+        {
+            lcddat('2');
+            delay(1000);
+            x = 1;
+            return 2;
+        }
+        if (keycolumn3 == 0)
+        {
+            lcddat('3');
+            delay(1000);
+            x = 1;
+            return 3;
+        }
+        // assign values for second row
+        keyrow1 = 1;
+        keyrow2 = 0;
+        keyrow3 = 1;
+        keyrow4 = 1;
+
+        if (keycolumn1 == 0)
+        {
+            lcddat('4');
+            delay(1000);
+            x = 1;
+            return 4;
+        }
+        if (keycolumn2 == 0)
+        {
+            lcddat('5');
+            delay(1000);
+            x = 1;
+            return 5;
+        }
+        if (keycolumn3 == 0)
+        {
+            lcddat('6');
+            delay(1000);
+            x = 1;
+            return 6;
+        }
+
+        // assign values for third row
+        keyrow1 = 1;
+        keyrow2 = 1;
+        keyrow3 = 0;
+        keyrow4 = 1;
+        if (keycolumn1 == 0)
+        {
+            lcddat('7');
+            delay(1000);
+            x = 1;
+            return 7;
+        }
+        if (keycolumn2 == 0)
+        {
+            lcddat('8');
+            delay(1000);
+            x = 1;
+            return 8;
+        }
+        if (keycolumn3 == 0)
+        {
+            lcddat('9');
+            delay(1000);
+            x = 1;
+            return 9;
+        }
+
+        // assign values for forth row
+        keyrow1 = 1;
+        keyrow2 = 1;
+        keyrow3 = 1;
+        keyrow4 = 0;
+
+        if (keycolumn1 == 0)
+        {
+            lcddat('*');
+            delay(1000);
+            x = 1;
+            return '*';
+        }
+        if (keycolumn2 == 0)
+        {
+            lcddat('0');
+            delay(1000);
+            x = 1;
+            return 0;
+        }
+        if (keycolumn3 == 0)
+        {
+            lcddat('#');
             delay(1000);
             x = 1;
             return '#';
