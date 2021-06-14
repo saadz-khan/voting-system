@@ -163,68 +163,68 @@ void result(){
         // All Parties Tie Situation
 		else if (party1 == party2 && party1 == party3 && party2 != 0 && party3 != 0 && party4 != 0   ){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("All parties");
+            lcddisplay("All parties     ");
         }
 		// Three Parties Tie Situations
 		else if (party1 == party2 && party1 == party3 && party2 != 0 && party3 != 0  ){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PTI PPP PML");
+            lcddisplay("PTI PPP PML     ");
         }
 		else if (party1 == party3 && party1 == party4 && party3 != 0 && party4 != 0  ){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PTI PML JUI");
+            lcddisplay("PTI PML JUI     ");
         }
 		else if (party2 == party3 && party2 == party4 && party3 != 0 && party4 != 0  ){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PPP PML JUI");
+            lcddisplay("PPP PML JUI     ");
         }
 		// Party 1 Tie Situation
         else if (party1 == party2 && party2 != 0){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PTI and PPP");
+            lcddisplay("PTI and PPP     ");
         }
 		 
         else if (party1 == party3 && party3 != 0){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PTI and PML");
+            lcddisplay("PTI and PML     ");
         }
         else if (party1 == party4 && party4 != 0){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PTI and JUI");
+            lcddisplay("PTI and JUI     ");
         }
         // Party2 Tie Situations
         else if (party2 == party3 && party3 != 0){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PPP and PML");
+            lcddisplay("PPP and PML     ");
         }
         else if (party2 == party4 && party4 != 0){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PPP and JUI");
+            lcddisplay("PPP and JUI     ");
         }
         // Party 3 Tie Situations
         else if (party3 == party4 && party4 != 0){
             lcdcmd(0x80);
-            lcddisplay("Tie in Election");
+            lcddisplay("Tie in Election ");
             lcdcmd(0xc0);
-            lcddisplay("PML and JUI");
+            lcddisplay("PML and JUI     ");
         }
 }
 void if_func(){
