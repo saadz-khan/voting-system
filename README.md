@@ -1,4 +1,4 @@
-# voting-banking-system
+# voting-system
 ## Microcontroller 8051 based Project. 
 ### Prototype Banking and Voting System
 
