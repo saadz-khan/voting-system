@@ -46,7 +46,8 @@ void count();
 void thank_func();
 void display_vote(unsigned int party);
 void result();
-
+void if_func();
+void else_func();
 // main function
 int main()
 {
@@ -54,10 +55,11 @@ int main()
     lcdcmd(0x38); //decimal value: 56
     lcdcmd(0x01); //decimal value: 1	lcd
 	lcdcmd(0x80);
-            line_disp("ENTER NO OF VOTES ");
-            delay(500);
-	        lcdcmd(0xc0); //decimal value: 193
-			r = keygive();
+    line_disp("ENTER NO OF VOTES ");
+    delay(500);
+    lcdcmd(0xc0); //decimal value: 193
+	r = keygive();
+    a:
     while (1)
     {
         unsigned int i = 0;      // Temporary Variable Declaration
@@ -93,7 +95,7 @@ int main()
             lcdcmd(0xcc);
             display_vote(party4);
         }
-        else return 0;
+        else goto a;
     j++;      
     thank_func(); 
     }
@@ -225,52 +227,75 @@ void result(){
             lcddisplay("PML and JUI");
         }
 }
+void if_func(){
+    delay(500);
+    lcdcmd(0x01); //decimal value: 1
+    lcdcmd(0x81); //decimal value: 129
+    // show pin is correct
+    lcddisplay("PIN CORRECT");
+    delay(500);
+    // door motor will run
+    motorpin1 = 1;
+    motorpin2 = 0;
+    lcdcmd(0xc1); //decimal value: 193
+    // show the door is unlocked
+    lcddisplay("AUTHENTICATED");
+    delay(10000);
+    motorpin1 = 1;
+    motorpin2 = 0;
+    lcdcmd(0x01); //decimal value: 1
+}
+void else_func(){
+    lcdcmd(0x01); //decimal value: 1
+    lcdcmd(0x80); //decimal value: 129
+    // show pin is correct
+    lcddisplay("WRONG PIN");
+}
 
 int check()
 {
+    unsigned int i;
     //  compare the input value with the assign password value
-    if ((pin1[0] == Epin[0] && pin1[1] == Epin[1] && pin1[2] == Epin[2] && pin1[3] == Epin[3] && pin1[4] == Epin[4])
-    || (pin2[0] == Epin[0] && pin2[1] == Epin[1] && pin2[2] == Epin[2] && pin2[3] == Epin[3] && pin2[4] == Epin[4])
-    || (pin3[0] == Epin[0] && pin3[1] == Epin[1] && pin3[2] == Epin[2] && pin3[3] == Epin[3] && pin3[4] == Epin[4])
-    || (pin4[0] == Epin[0] && pin4[1] == Epin[1] && pin4[2] == Epin[2] && pin4[3] == Epin[3] && pin4[4] == Epin[4]))
-    {
-        delay(500);
-        lcdcmd(0x01); //decimal value: 1
-        lcdcmd(0x81); //decimal value: 129
-        // show pin is correct
-        lcddisplay("PIN CORRECT");
-        delay(500);
-        // door motor will run
-        motorpin1 = 1;
-        motorpin2 = 0;
-        lcdcmd(0xc1); //decimal value: 193
-        // show the door is unlocked
-        lcddisplay("AUTHENTICATED");
-        delay(10000);
-        motorpin1 = 1;
-        motorpin2 = 0;
-        lcdcmd(0x01); //decimal value: 1
-		return 1;
+    if (pin1[0] == Epin[0] && pin1[1] == Epin[1] && pin1[2] == Epin[2] && pin1[3] == Epin[3] && pin1[4] == Epin[4])
+    {        
+        if_func();
+        for (i = 0; i<=4 ; i++)
+        pin1[i] = " ";
+        return 1;
     }
-    else
+    else if (pin2[0] == Epin[0] && pin2[1] == Epin[1] && pin2[2] == Epin[2] && pin2[3] == Epin[3] && pin2[4] == Epin[4])
     {
-        lcdcmd(0x01); //decimal value: 1
-        lcdcmd(0x80); //decimal value: 128
-        lcddisplay("WRONG PIN");
-        delay(500);
-        lcdcmd(0x01); //decimal value: 1
-		return 0;
+        if_func();
+        for (i = 0; i<=4 ; i++)
+            pin2[i] = " ";
+        return 1;
+    }
+    else if (pin3[0] == Epin[0] && pin3[1] == Epin[1] && pin3[2] == Epin[2] && pin3[3] == Epin[3] && pin3[4] == Epin[4])
+    {
+        if_func();
+        for (i = 0; i<=4 ; i++)
+            pin3[i] = " ";
+        return 1;
+    }
+    else if (pin4[0] == Epin[0] && pin4[1] == Epin[1] && pin4[2] == Epin[2] && pin4[3] == Epin[3] && pin4[4] == Epin[4])
+    {
+        if_func();
+        for (i = 0; i<=4 ; i++)
+            pin4[i] = " ";
+        return 1;
+    }
+    else{ 
+        else_func();
+        return 0;
     }
 }
 
-
 void line_disp(unsigned char *c)
 {
-		
-		lcdcmd(0x01); //decimal value: 1
-	    lcdcmd(0x80); //decimal value: 129
- 	    // show pin is correct
-  	    lcddisplay(c);
+    lcdcmd(0x01); //decimal value: 1
+    lcdcmd(0x80); //decimal value: 129
+ 	// show pin is correct
+    lcddisplay(c);
 }
 
 // Thank You function
